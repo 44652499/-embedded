@@ -1,0 +1,80 @@
+#include  <iostream>
+#include  <stdlib.h>
+#include  <string.h>
+using namespace std;
+/*
+自定义异常类:
+*/
+class exception_base
+{
+public:
+  virtual const  char *  what()=0;
+};
+class exception_0:public exception_base
+{
+public:
+	exception_0(const char* msg)
+	{
+		strcpy(this->msg,msg);
+	}
+	const  char *  what()
+	{
+		cout<<msg<<endl;
+	}
+private:
+	char msg[20];
+};
+class exception_1:public exception_base
+{
+public:
+	exception_1(const char* msg)
+	{
+		strcpy(this->msg,msg);
+	}
+	const  char *  what()
+	{
+		cout<<msg<<endl;
+	}
+private:
+	char msg[20];
+};
+class exception_2:public exception_base
+{
+public:
+	exception_2(const char* msg)
+	{
+		strcpy(this->msg,msg);
+	}
+	const  char *  what()
+	{
+		cout<<msg<<endl;
+	}
+private:
+	char msg[20];
+};
+int  define_div(int x,int y)
+{
+	if(y==0)
+		throw new exception_0("div  is zero");//抛出自定义异常类的实例
+	if(y==1)
+		throw new exception_1("div  is one");
+	if(y==2)
+		throw new exception_2("div  is two");
+	return x/y;
+}
+
+int main(int argc, char const *argv[])
+{
+	int x,y;
+	cin>>x>>y;
+	try
+	{
+		define_div(x,y);
+	}
+	catch(exception_base*  h1)
+	{
+		//cout<<"0"<<endl;
+		h1->what();
+	}
+	return 0;
+}

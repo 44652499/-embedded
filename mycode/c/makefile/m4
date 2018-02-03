@@ -1,0 +1,9 @@
+path=$(shell pwd)
+main:add.o sub.o main.o
+	gcc  add.o sub.o main.o -o main
+	echo $(path)
+%.o:%.c
+	gcc  -c $<  -o $@
+.PHONY:clean
+clean:
+	rm -f add.o  sub.o main.o

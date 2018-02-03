@@ -1,0 +1,1 @@
+cmd_/mnt/hgfs/winshare/kernelcode/hello.ko := arm-linux-ld -EL -r  -T /home/linux-3.0.8/scripts/module-common.lds --build-id  -o /mnt/hgfs/winshare/kernelcode/hello.ko /mnt/hgfs/winshare/kernelcode/hello.o /mnt/hgfs/winshare/kernelcode/hello.mod.o

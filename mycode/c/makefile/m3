@@ -1,0 +1,7 @@
+main:add.o sub.o main.o
+	gcc  add.o sub.o main.o -o main
+%.o:%.c
+	gcc  -c $<  -o $@
+.PHONY:clean
+clean:
+	rm -f add.o  sub.o main.o

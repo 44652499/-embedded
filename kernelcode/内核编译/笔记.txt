@@ -1,0 +1,84 @@
+linux驱动
+
+Linux驱动是什么东西？
+如果有一辆汽车，是否需要一个司机来开动？这个司机就是driver。如果司机仅仅是为老板开车，那么是老板决定开往哪里。
+
+对于Linux来说，驱动负责控制具体的硬件模块，只实现机制（让硬件工作起来）。用户程序访问驱动，来控制硬件模块。用户程序实现的是策略（决定硬件如何工作）。
+
+驱动的类型：
+
+字符（char）设备驱动
+设备的访问可以按数据流的方式来实施。数据的读写量比较少，可以一个字节一个字节地读写。
+鼠标，键盘，以gpio为基础的硬件，lcd显示屏。
+
+块（block）设备驱动
+设备的访问是整块（512k）进行,数据的吞吐量很大。
+例如：硬盘，u盘。
+
+在一些存储量不大的介质上，既可以按字符为单位读取，也可以按块为单位读取。两种类型之间的分界线很模糊。
+
+网络设备驱动
+负责网络通信的设备的驱动。这种驱动的机制和前两种有很大的区别。
+比如网卡设备驱动。
+
+
+字符设备编程
+
+字符设备驱动程序如何集成到内核里面？
+
+一、可以把驱动的源码放到源码树，一起编译。然后再下载内核。
+缺点：内核会变得非常的臃肿。
+      修改很麻烦。
+
+二、采用windows的动态dll加载方式。在需要的时候，将模块加载到系统里。使用结束后，从系统里将模块卸载。
+这种办法是我们推荐使用的办法。
+
+如何编写模块？
+一个模块至少需要以下几个部分：
+1、模块初始化函数
+2、模块退出前用来清理的函数。
+3、模块的许可声明。
+
+另外还有
+模块其它信息如作者，描述等声明
+
+
+模块编译后的结果是: 模块名.ko
+
+编译方法：
+一、放到内核源文件编译
+将mymodule.c拷贝到linux-3.0.8的drivers/char目录下。
+修改该目录下的Kconfig，在最后一行前加入信息：
+config MYMODULE
+	tristate "mymodule"
+	default y
+	help
+	  y：build into kernel；n：do not build; m:build as module
+然后，打开目录下的makefile，加上
+obj-$(CONFIG_MYMODULE)+=mymodule.o
+然后到linux-3.0.8目录下，执行make modules，就会在char目录下得到mymodule.ko文件。
+
+二，makefile方法
+在mymodule.c目录下编写makefile，内容如下
+KERN_DIR=/home/yn/source/linux-3.0.8
+MY_DIR=$(shell pwd)
+obj-m=mymodule.o
+all:
+	make -C $(KERN_DIR) M=$(MY_DIR) modules
+
+clean:
+	rm -f *.ko
+然后make，也会得到ko文件。
+
+编译得到的ko文件，下载到板子上，用insmod mymodule.ko插到系统里。
+用rz命令或者sdcard或者u盘
+
+lsmod 查看系统里有哪些模块。
+rmmod mymodule卸载模块。
+modinfo mymodule.ko可以查看模块的信息
+
+
+
+
+
+
